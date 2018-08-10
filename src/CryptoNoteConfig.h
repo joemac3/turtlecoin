@@ -41,31 +41,23 @@ const uint64_t LWMA_2_DIFFICULTY_BLOCK_INDEX_V2              = 700000;
 const uint64_t DIFFICULTY_WINDOW_V3                          = 60;
 const uint64_t DIFFICULTY_BLOCKS_COUNT_V3                    = DIFFICULTY_WINDOW_V3 + 1;
 
-const unsigned EMISSION_SPEED_FACTOR                         = 24;
+const unsigned EMISSION_SPEED_FACTOR                         = 25;
 static_assert(EMISSION_SPEED_FACTOR <= 8 * sizeof(uint64_t), "Bad EMISSION_SPEED_FACTOR");
 
 /* Premine amount */
 const uint64_t GENESIS_BLOCK_REWARD                          = UINT64_C(98646009300);
 
 /* How to generate a premine:
-
 * Compile your code
-
 * Run zedwallet, ignore that it can't connect to the daemon, and generate an
   address. Save this and the keys somewhere safe.
-
 * Launch the daemon with these arguments:
 --print-genesis-tx --genesis-block-reward-address <premine wallet address>
-
 For example:
 TurtleCoind --print-genesis-tx --genesis-block-reward-address TRTLv2Fyavy8CXG8BPEbNeCHFZ1fuDCYCZ3vW5H5LXN4K2M2MHUpTENip9bbavpHvvPwb4NDkBWrNgURAd5DB38FHXWZyoBh4wW
-
 * Take the hash printed, and replace it with the hash below in GENESIS_COINBASE_TX_HEX
-
 * Recompile, setup your seed nodes, and start mining
-
 * You should see your premine appear in the previously generated wallet.
-
 */
 const char     GENESIS_COINBASE_TX_HEX[]                     = "";
 
@@ -82,6 +74,11 @@ const uint64_t MINIMUM_MIXIN_V1                              = 0;
 const uint64_t MAXIMUM_MIXIN_V1                              = 100;
 const uint64_t MINIMUM_MIXIN_V2                              = 7;
 const uint64_t MAXIMUM_MIXIN_V2                              = 7;
+
+const uint32_t MIXIN_LIMITS_V1_HEIGHT                        = 440000;
+const uint32_t MIXIN_LIMITS_V2_HEIGHT                        = 620000;
+
+const uint64_t DEFAULT_MIXIN                                 = MINIMUM_MIXIN_V2;
 
 const uint64_t DEFAULT_DUST_THRESHOLD                        = UINT64_C(10);
 const uint64_t DEFAULT_DUST_THRESHOLD_V2                     = UINT64_C(0);
