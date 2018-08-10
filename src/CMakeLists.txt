@@ -8,7 +8,7 @@ file(GLOB_RECURSE ConnectivityTool ConnectivityTool/*)
 file(GLOB_RECURSE Crypto crypto/*)
 file(GLOB_RECURSE CryptoNoteCore CryptoNoteCore/* CryptoNoteConfig.h)
 file(GLOB_RECURSE CryptoNoteProtocol CryptoNoteProtocol/*)
-file(GLOB_RECURSE TurtleCoind Daemon/*)
+file(GLOB_RECURSE MarchMadCashd Daemon/*)
 file(GLOB_RECURSE Http HTTP/*)
 file(GLOB_RECURSE Logging Logging/*)
 file(GLOB_RECURSE miner Miner/*)
@@ -22,7 +22,7 @@ file(GLOB_RECURSE Wallet Wallet/*)
 file(GLOB_RECURSE WalletLegacy WalletLegacy/*)
 file(GLOB_RECURSE JsonRpcServer JsonRpcServer/*)
 file(GLOB_RECURSE service WalletService/*)
-file(GLOB_RECURSE zedwallet zedwallet/*)
+file(GLOB_RECURSE madcashwallet madcashwallet/*)
 
 if(MSVC)
 file(GLOB_RECURSE System System/* Platform/Windows/System/*)
@@ -35,7 +35,7 @@ endif()
 # This appears to be an IDE thing, to group files together.
 # https://cmake.org/cmake/help/v3.0/command/source_group.html
 # Probably not what you need to be looking at if something isn't building
-source_group("" FILES $${Common} ${ConnectivityTool} ${Crypto} ${CryptoNoteCore} ${CryptoNoteProtocol} ${TurtleCoind} ${JsonRpcServer} ${Http} ${Logging} ${miner} ${Mnemonics} ${NodeRpcProxy} ${P2p} ${Rpc} ${Serialization} ${System} ${Transfers} ${Wallet} ${WalletLegacy} ${zedwallet})
+source_group("" FILES $${Common} ${ConnectivityTool} ${Crypto} ${CryptoNoteCore} ${CryptoNoteProtocol} ${MarchMadCashd} ${JsonRpcServer} ${Http} ${Logging} ${miner} ${Mnemonics} ${NodeRpcProxy} ${P2p} ${Rpc} ${Serialization} ${System} ${Transfers} ${Wallet} ${WalletLegacy} ${madcashwallet})
 
 add_library(BlockchainExplorer ${BlockchainExplorer})
 add_library(Common ${Common})
@@ -58,8 +58,8 @@ if(MSVC)
   set(DAEMON_SOURCES_OS
     BinaryInfo/daemon.rc
   )
-  set(ZED_WALLET_SOURCES_OS
-    BinaryInfo/zedwallet.rc
+  set(MADCASH_WALLET_SOURCES_OS
+    BinaryInfo/madcashwallet.rc
   )
   set(MINER_SOURCES_OS
     BinaryInfo/miner.rc
@@ -69,14 +69,14 @@ if(MSVC)
   )
 endif()
 
-add_executable(TurtleCoind ${TurtleCoind} ${DAEMON_SOURCES_OS})
-add_executable(zedwallet ${zedwallet} ${ZED_WALLET_SOURCES_OS})
+add_executable(MarchMadCashd ${MarchMadCashd} ${DAEMON_SOURCES_OS})
+add_executable(madcashwallet ${madcashwallet} ${MadCash_WALLET_SOURCES_OS})
 add_executable(service ${service} ${PG_SOURCES_OS})
 add_executable(miner ${miner} ${MINER_SOURCES_OS})
 
 if(MSVC)
   target_link_libraries(System ws2_32)
-  target_link_libraries(TurtleCoind Rpcrt4)
+  target_link_libraries(MarchMadCashd Rpcrt4)
   target_link_libraries(service Rpcrt4)
 endif ()
 
@@ -87,11 +87,11 @@ target_link_libraries(P2P CryptoNoteCore Logging ${Boost_LIBRARIES} upnpc-static
 target_link_libraries(Rpc CryptoNoteCore Logging P2P)
 target_link_libraries(WalletService Mnemonics)
 if(MSVC)
-	target_link_libraries(TurtleCoind P2P Rpc Serialization System Http Logging CryptoNoteCore Crypto Common rocksdb ${Boost_LIBRARIES} )
+	target_link_libraries(MarchMadCashd P2P Rpc Serialization System Http Logging CryptoNoteCore Crypto Common rocksdb ${Boost_LIBRARIES} )
 else()
-	target_link_libraries(TurtleCoind P2P Rpc Serialization System Http Logging CryptoNoteCore Crypto Common rocksdblib ${Boost_LIBRARIES} )
+	target_link_libraries(MarchMadCashd P2P Rpc Serialization System Http Logging CryptoNoteCore Crypto Common rocksdblib ${Boost_LIBRARIES} )
 endif()
-target_link_libraries(zedwallet Mnemonics Wallet NodeRpcProxy Transfers Rpc Http CryptoNoteCore System Logging Common ${Boost_LIBRARIES})
+target_link_libraries(madcashwallet Mnemonics Wallet NodeRpcProxy Transfers Rpc Http CryptoNoteCore System Logging Common ${Boost_LIBRARIES})
 target_link_libraries(service WalletService JsonRpcServer Wallet NodeRpcProxy Transfers CryptoNoteCore Crypto Rpc Http System Logging Common ${Boost_LIBRARIES})
 target_link_libraries(Wallet NodeRpcProxy Transfers Rpc P2P upnpc-static Http Serialization CryptoNoteCore System Logging Common Crypto ${Boost_LIBRARIES})
 target_link_libraries(miner CryptoNoteCore Rpc Serialization System Http Logging Common Crypto ${Boost_LIBRARIES})
@@ -100,13 +100,13 @@ target_link_libraries(miner CryptoNoteCore Rpc Serialization System Http Logging
 # In this case it's because we need to have the current version name rather
 # than a cached one
 add_dependencies(Rpc version)
-add_dependencies(TurtleCoind version)
-add_dependencies(zedwallet version)
+add_dependencies(MarchMadCashd version)
+add_dependencies(madcashwallet version)
 add_dependencies(service version)
 add_dependencies(P2P version)
 
 # Finally build the binaries
-set_property(TARGET TurtleCoind PROPERTY OUTPUT_NAME "TurtleCoind")
-set_property(TARGET zedwallet PROPERTY OUTPUT_NAME "zedwallet")
-set_property(TARGET service PROPERTY OUTPUT_NAME "turtle-service")
+set_property(TARGET MarchMadCashd PROPERTY OUTPUT_NAME "MarchMadCashd")
+set_property(TARGET madcashwallet PROPERTY OUTPUT_NAME "madcashwallet")
+set_property(TARGET service PROPERTY OUTPUT_NAME "connectivity_tool")
 set_property(TARGET miner PROPERTY OUTPUT_NAME "miner")
